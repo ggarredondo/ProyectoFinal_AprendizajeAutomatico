@@ -6,6 +6,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import pandas as pd
 import sklearn.utils as sk
+import sklearn.decomposition as skde
 import seaborn as sns
 
 from sklearn.model_selection import train_test_split
@@ -32,8 +33,6 @@ Data = Data.drop(Data.columns[[0,1,2,3,4]], axis='columns')
 Y = Data.iloc[:, Data.shape[1]-1]
 X = Data.drop(Data.columns[[Data.shape[1]-1]], axis='columns')
 
-X,Y = sk.shuffle(X,Y)
-
 #Dividimos el conjunto de datos en datos de entrenamiento y datos de test
 x_train, x_test, y_train, y_test = train_test_split(X, Y, test_size=0.20, random_state=seed)
 
@@ -53,14 +52,14 @@ x_test = x_test.drop(x_test.columns[[121, 119, 118, 117, 116]], axis='columns')
 x_test = x_test.drop(x_test.columns[range(96, 113)], axis='columns')
 
 #Tratamos ahora con el único valor perdido que queda
-
 mean = pd.to_numeric(x_train.iloc[:, 25].dropna()).mean()
 std = pd.to_numeric(x_train.iloc[:, 25].dropna()).std()
 
-x_train = x_train.replace(np.nan, mean + uniform(-1.5*std, 1.5*std))
+x_train = x_train.replace(np.nan,str(mean + uniform(-1.5*std, 1.5*std)))
+x_train.iloc[:,25] = x_train.iloc[:,25].astype(float)
 
 
-#---------MATRIZ DE DESCRICIÓN DE DATOS--------------
+#---------MATRIZ DE DESCRIPCIÓN DE DATOS--------------
 
 df_out = pd.DataFrame()
 df_out["Mean"] = x_train.mean(axis=0)
@@ -73,6 +72,13 @@ df_out["P3"] = x_train.quantile(0.75, axis = 0)
 
 print(tabulate(df_out, headers=df_out.head(), tablefmt="github"))
 
+#---------ELIMINAR OUTLIERS--------------
 
-
-
+# Utilizamos PCA para reducir la dimensionalidad de los datos a 1D y visualizar el conjunto de entrenamiento.
+# Se reduce a 1D pues uno de los ejes debe ser necesariamente la etiqueta continua correspondiente, ya que
+# el problema es de regresión.
+pca2d = skde.PCA(n_components=1).fit_transform(x_train)
+plt.figure(figsize=(16,10))
+sns.scatterplot(x=pca2d[:,0], y=y_train)
+plt.title("Training reducido a 2D")
+plt.show()
