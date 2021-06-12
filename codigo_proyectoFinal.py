@@ -34,7 +34,8 @@ Y = Data.iloc[:, Data.shape[1]-1]
 X = Data.drop(Data.columns[[Data.shape[1]-1]], axis='columns')
 
 #Dividimos el conjunto de datos en datos de entrenamiento y datos de test
-x_train, x_test, y_train, y_test = train_test_split(X, Y, test_size=0.20, random_state=seed)
+#Con el parámetro shuffle nos aseguramos que se aleatoriza la división de train y test
+x_train, x_test, y_train, y_test = train_test_split(X, Y, test_size=0.20, random_state=seed, shuffle=True)
 
 #---------TRATAMIENTO DE DATOS PERDIDOS--------------
 
