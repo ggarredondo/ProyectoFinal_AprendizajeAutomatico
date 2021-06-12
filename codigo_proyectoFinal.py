@@ -34,13 +34,17 @@ Y = Data.iloc[:, Data.shape[1]-1]
 X = Data.drop(Data.columns[[Data.shape[1]-1]], axis='columns')
 
 #Dividimos el conjunto de datos en datos de entrenamiento y datos de test
-#Con el parámetro shuffle nos aseguramos que se aleatoriza la división de train y test
+#Con el parámetro shuffle nos aseguramos de que los datos se han barajado y no influye
+#el orden que tuvieran al inicio en nuestra partición de train y test.
 x_train, x_test, y_train, y_test = train_test_split(X, Y, test_size=0.20, random_state=seed, shuffle=True)
 
 #---------TRATAMIENTO DE DATOS PERDIDOS--------------
 
 #Pasamos los valores perdidos de una '?' a un 'NaN para que missingno los detecte
 x_train = x_train.replace("?", np.nan)
+
+#Mostramos para cada atributo los valores perdidos que tiene
+print(x_train.isnull().sum())
 
 #Pintamos la matriz de datos perdidos
 msno.matrix(x_train)
@@ -60,6 +64,8 @@ x_train = x_train.replace(np.nan,str(mean + uniform(-1.5*std, 1.5*std)))
 x_train.iloc[:,25] = x_train.iloc[:,25].astype(float)
 
 
+input("\n--- Pulsar tecla para continuar ---\n")
+
 #---------MATRIZ DE DESCRIPCIÓN DE DATOS--------------
 
 df_out = pd.DataFrame()
@@ -72,6 +78,8 @@ df_out["P2"] = x_train.quantile(0.5, axis = 0)
 df_out["P3"] = x_train.quantile(0.75, axis = 0)
 
 print(tabulate(df_out, headers=df_out.head(), tablefmt="github"))
+
+input("\n--- Pulsar tecla para continuar ---\n")
 
 #---------ELIMINAR OUTLIERS--------------
 
