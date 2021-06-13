@@ -5,15 +5,13 @@ from tabulate import tabulate
 import numpy as np
 import matplotlib.pyplot as plt
 import pandas as pd
-import sklearn.utils as sk
-import sklearn.decomposition as skde
-import seaborn as sns
 
 from sklearn.model_selection import train_test_split
 from sklearn.linear_model import SGDRegressor
+from sklearn.ensemble import RandomForestRegressor
+from sklearn.neural_network import MLPRegressor
 from sklearn.model_selection import cross_val_score
 from sklearn.model_selection import GridSearchCV
-from sklearn import metrics
 
 import missingno as msno
 from random import uniform
@@ -48,6 +46,7 @@ print(x_train.isnull().sum())
 
 #Pintamos la matriz de datos perdidos
 msno.matrix(x_train)
+plt.show()
 
 #Borramos los atributos que superen el 20% de de datos perdidos
 x_train = x_train.drop(x_train.columns[[121, 119, 118, 117, 116]], axis='columns')
@@ -81,13 +80,75 @@ print(tabulate(df_out, headers=df_out.head(), tablefmt="github"))
 
 input("\n--- Pulsar tecla para continuar ---\n")
 
-#---------ELIMINAR OUTLIERS--------------
+#---------GRIDSEARCH--------------
+ 
+         #GRADIENTE DESCENDENTE
 
-# Utilizamos PCA para reducir la dimensionalidad de los datos a 1D y visualizar el conjunto de entrenamiento.
-# Se reduce a 1D pues uno de los ejes debe ser necesariamente la etiqueta continua correspondiente, ya que
-# el problema es de regresión.
-pca2d = skde.PCA(n_components=1).fit_transform(x_train)
-plt.figure(figsize=(16,10))
-sns.scatterplot(x=pca2d[:,0], y=y_train)
-plt.title("Training reducido a 2D")
-plt.show()
+#Parametros que vamos a usar en GridSearch (regularizacion)
+parameters = {'penalty':('l1','l2','elasticnet')}
+
+sgd = SGDRegressor(random_state=seed)
+
+clf = GridSearchCV(sgd, parameters, verbose=3, scoring="neg_root_mean_squared_error")
+clf.fit(x_train, y_train)
+
+print("Parámetros a usar para SGD: ", clf.best_params_)
+
+input("\n--- Pulsar tecla para continuar ---\n")
+
+         #RANDOM FOREST
+
+#Parametros que vamos a usar en GridSearch (regularizacion)
+parameters = {'penalty':('l1','l2','elasticnet')}
+
+sgd = RandomForestRegressor(random_state=seed)
+
+clf = GridSearchCV(sgd, parameters, verbose=3, scoring="neg_root_mean_squared_error")
+clf.fit(x_train, y_train)
+
+print("Parámetros a usar para Random Forest: ", clf.best_params_)
+
+input("\n--- Pulsar tecla para continuar ---\n")
+
+         #PERCEPTRON MULTICAPA
+
+#Parametros que vamos a usar en GridSearch (regularizacion)
+parameters = {'penalty':('l1','l2','elasticnet')}
+
+sgd = MLPRegressor(random_state=seed)
+
+clf = GridSearchCV(sgd, parameters, verbose=3, scoring="neg_root_mean_squared_error")
+clf.fit(x_train, y_train)
+
+print("Parámetros a usar para Perceptron Multicapa: ", clf.best_params_)
+
+input("\n--- Pulsar tecla para continuar ---\n")
+
+#---------GRIDSEARCH--------------
+
+         #GRADIENTE DESCENDENTE
+
+clf = SGDRegressor(penalty = 'l2', random_state=seed)
+
+scores = cross_val_score(clf, x_train, y_train, cv=5, scoring = "neg_mean_squared_error")
+ 
+print("SGDRegressor CV: ", abs(scores.mean()))
+
+
+         #RANDOM FOREST
+
+clf = RandomForestRegressor(penalty = 'l2', random_state=seed)
+
+scores = cross_val_score(clf, x_train, y_train, cv=5, scoring = "neg_mean_squared_error")
+ 
+print("SGDRegressor CV: ", abs(scores.mean()))
+
+         #PERCEPTRON MULTICAPA
+        
+clf = MLPRegressor(penalty = 'l2', random_state=seed)
+
+scores = cross_val_score(clf, x_train, y_train, cv=5, scoring = "neg_mean_squared_error")
+ 
+print("SGDRegressor CV: ", abs(scores.mean()))
+
+
