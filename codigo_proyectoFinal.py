@@ -27,7 +27,7 @@ Data = pd.read_csv('datos/communities.data', sep=",", header=None)
 #Eliminamos los cinco primeros atributos que como indica el problema no son predictivos
 Data = Data.drop(Data.columns[[0,1,2,3,4]], axis='columns')
 
-#Obtenemos los datos y las etiquetas por separado
+#Obtenemos los datos y las variables objetivo por separado
 Y = Data.iloc[:, Data.shape[1]-1]
 X = Data.drop(Data.columns[[Data.shape[1]-1]], axis='columns')
 
@@ -85,9 +85,9 @@ input("\n--- Pulsar tecla para continuar ---\n")
          #GRADIENTE DESCENDENTE
 
 #Parametros que vamos a usar en GridSearch (regularizacion)
-parameters = {'learning_rate':('adaptive','invscaling'), 'eta0':[0.01,0.1], 'alpha':[0.0001,0.001]}
+parameters = {'eta0':[0.01,0.1], 'alpha':[0.0001,0.001]}
 
-sgd = SGDRegressor(random_state=seed, penalty='l2')
+sgd = SGDRegressor(random_state=seed, penalty='l2', learning_rate='adaptive')
 
 clf = GridSearchCV(sgd, parameters, verbose=3, scoring="neg_mean_absolute_error")
 clf.fit(x_train, y_train)
@@ -99,7 +99,7 @@ input("\n--- Pulsar tecla para continuar ---\n")
          #RANDOM FOREST
 
 #Parametros que vamos a usar en GridSearch (regularizacion)
-parameters = {'n_estimators':[10, 50, 100], 'min_samples_leaf':[5,10]}
+parameters = {'n_estimators':[10, 50], 'min_samples_leaf':[5,10]}
 
 rf = RandomForestRegressor(random_state=seed, max_features="sqrt", oob_score=True)
 
@@ -113,9 +113,9 @@ input("\n--- Pulsar tecla para continuar ---\n")
          #PERCEPTRON MULTICAPA
 
 #Parametros que vamos a usar en GridSearch (regularizacion)
-parameters = {'learning_rate':('adaptive','constant'),'alpha':[0.0001,0.001]}
+parameters = {'alpha':[0.0001,0.001], 'learning_rate_init':[0.001,0.0001]}
 
-mlp = MLPRegressor(random_state=seed, activation='tanh')
+mlp = MLPRegressor(random_state=seed, activation='tanh', solver='sgd', learning_rate='adaptive')
 
 clf = GridSearchCV(mlp, parameters, verbose=3, scoring="neg_mean_absolute_error")
 clf.fit(x_train, y_train)
@@ -128,7 +128,7 @@ input("\n--- Pulsar tecla para continuar ---\n")
 
          #GRADIENTE DESCENDENTE
 
-clf = SGDRegressor(penalty = 'l2', random_state=seed)
+clf = SGDRegressor(penalty = 'l2', random_state=seed, learning_rate='adaptive', alpha=0.001)
 
 scores = cross_val_score(clf, x_train, y_train, cv=5, scoring = "neg_mean_absolute_error")
  
@@ -137,18 +137,18 @@ print("SGDRegressor CV: ", abs(scores.mean()))
 
          #RANDOM FOREST
 
-clf = RandomForestRegressor(penalty = 'l2', random_state=seed)
+clf = RandomForestRegressor(random_state=seed, max_features="sqrt", oob_score=True, min_samples_leaf=5, n_estimators=50)
 
 scores = cross_val_score(clf, x_train, y_train, cv=5, scoring = "neg_mean_absolute_error")
  
-print("SGDRegressor CV: ", abs(scores.mean()))
+print("RandomForest CV: ", abs(scores.mean()))
 
          #PERCEPTRON MULTICAPA
         
-clf = MLPRegressor(penalty = 'l2', random_state=seed)
+clf = MLPRegressor(random_state=seed, activation='tanh', solver='sgd', learning_rate='adaptive', alpha=0.001)
 
 scores = cross_val_score(clf, x_train, y_train, cv=5, scoring = "neg_mean_absolute_error")
  
-print("SGDRegressor CV: ", abs(scores.mean()))
+print("MLPRegressor CV: ", abs(scores.mean()))
 
 
