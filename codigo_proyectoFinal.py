@@ -90,10 +90,10 @@ parameters = {'eta0':[0.01,0.1], 'alpha':[0.0001,0.001]}
 
 sgd = SGDRegressor(random_state=seed, penalty='l2', learning_rate='adaptive', max_iter=2000)
 
-clf = GridSearchCV(sgd, parameters, verbose=3, scoring="neg_mean_absolute_error")
-clf.fit(x_train, y_train)
+reg = GridSearchCV(sgd, parameters, verbose=3, scoring="neg_mean_absolute_error")
+reg.fit(x_train, y_train)
 
-print("Parámetros a usar para SGD: ", clf.best_params_)
+print("Parámetros a usar para SGD: ", reg.best_params_)
 
 input("\n--- Pulsar tecla para continuar ---\n")
 
@@ -104,10 +104,10 @@ parameters = {'n_estimators':[10, 50], 'min_samples_leaf':[5,10]}
 
 rf = RandomForestRegressor(random_state=seed, max_features="sqrt", oob_score=True)
 
-clf = GridSearchCV(rf, parameters, verbose=3, scoring="neg_mean_absolute_error")
-clf.fit(x_train, y_train)
+reg = GridSearchCV(rf, parameters, verbose=3, scoring="neg_mean_absolute_error")
+reg.fit(x_train, y_train)
 
-print("Parámetros a usar para Random Forest: ", clf.best_params_)
+print("Parámetros a usar para Random Forest: ", reg.best_params_)
 
 input("\n--- Pulsar tecla para continuar ---\n")
 
@@ -118,10 +118,10 @@ parameters = {'alpha':[0.0001,0.001], 'learning_rate_init':[0.001,0.01]}
 
 mlp = MLPRegressor(random_state=seed, activation='tanh', solver='sgd', learning_rate='adaptive')
 
-clf = GridSearchCV(mlp, parameters, verbose=3, scoring="neg_mean_absolute_error")
-clf.fit(x_train, y_train)
+reg = GridSearchCV(mlp, parameters, verbose=3, scoring="neg_mean_absolute_error")
+reg.fit(x_train, y_train)
 
-print("Parámetros a usar para Perceptron Multicapa: ", clf.best_params_)
+print("Parámetros a usar para Perceptron Multicapa: ", reg.best_params_)
 
 input("\n--- Pulsar tecla para continuar ---\n")
 
@@ -129,26 +129,26 @@ input("\n--- Pulsar tecla para continuar ---\n")
 
          #GRADIENTE DESCENDENTE
 
-clf = SGDRegressor(penalty = 'l2', random_state=seed, learning_rate='adaptive', alpha=0.001)
+reg = SGDRegressor(penalty = 'l2', random_state=seed, learning_rate='adaptive', alpha=0.001)
 
-scores = cross_val_score(clf, x_train, y_train, cv=5, scoring = "neg_mean_absolute_error")
+scores = cross_val_score(reg, x_train, y_train, cv=5, scoring = "neg_mean_absolute_error")
  
 print("SGDRegressor CV: ", abs(scores.mean()))
 
 
          #RANDOM FOREST
 
-clf = RandomForestRegressor(random_state=seed, max_features="sqrt", oob_score=True, min_samples_leaf=5, n_estimators=50)
+reg = RandomForestRegressor(random_state=seed, max_features="sqrt", oob_score=True, min_samples_leaf=5, n_estimators=50)
 
-scores = cross_val_score(clf, x_train, y_train, cv=5, scoring = "neg_mean_absolute_error")
+scores = cross_val_score(reg, x_train, y_train, cv=5, scoring = "neg_mean_absolute_error")
  
 print("RandomForest CV: ", abs(scores.mean()))
 
          #PERCEPTRON MULTICAPA
         
-clf = MLPRegressor(random_state=seed, activation='tanh', solver='sgd', learning_rate='adaptive', alpha=0.001, learning_rate_init=0.01)
+reg = MLPRegressor(random_state=seed, activation='tanh', solver='sgd', learning_rate='adaptive', alpha=0.001, learning_rate_init=0.01)
 
-scores = cross_val_score(clf, x_train, y_train, cv=5, scoring = "neg_mean_absolute_error")
+scores = cross_val_score(reg, x_train, y_train, cv=5, scoring = "neg_mean_absolute_error")
  
 print("MLPRegressor CV: ", abs(scores.mean()))
 
@@ -159,11 +159,11 @@ input("\n--- Pulsar tecla para continuar ---\n")
 #Volvemos a hacer el fit con los datos de entrenamiento y probamos que predice para los de test
 #Para ello usamos el modelo que mejor resultado nos dió en el apartado anterior
 
-clf = RandomForestRegressor(random_state=seed, max_features="sqrt", oob_score=True, min_samples_leaf=5, n_estimators=50)
+reg = RandomForestRegressor(random_state=seed, max_features="sqrt", oob_score=True, min_samples_leaf=5, n_estimators=50)
 
-clf.fit(x_train, y_train)
+reg.fit(x_train, y_train)
 
-prediction = clf.predict(x_test)
+prediction = reg.predict(x_test)
 
 print("Linear Regression Etest: ", metrics.mean_absolute_error(y_test, prediction))
 
