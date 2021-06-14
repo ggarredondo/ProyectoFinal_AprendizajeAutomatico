@@ -85,9 +85,9 @@ input("\n--- Pulsar tecla para continuar ---\n")
          #GRADIENTE DESCENDENTE
 
 #Parametros que vamos a usar en GridSearch (regularizacion)
-parameters = {'learning_rate':('adaptive','invscaling'), 'eta0':[0.01,0.1]}
+parameters = {'learning_rate':('adaptive','invscaling'), 'eta0':[0.01,0.1], 'alpha':[0.0001,0.001]}
 
-sgd = SGDRegressor(random_state=seed,loss="squared_loss", alpha=0.001)
+sgd = SGDRegressor(random_state=seed, penalty='l2')
 
 clf = GridSearchCV(sgd, parameters, verbose=3, scoring="neg_root_mean_squared_error")
 clf.fit(x_train, y_train)
