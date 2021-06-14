@@ -89,7 +89,7 @@ parameters = {'learning_rate':('adaptive','invscaling'), 'eta0':[0.01,0.1], 'alp
 
 sgd = SGDRegressor(random_state=seed, penalty='l2')
 
-clf = GridSearchCV(sgd, parameters, verbose=3, scoring="neg_root_mean_squared_error")
+clf = GridSearchCV(sgd, parameters, verbose=3, scoring="neg_mean_absolute_error")
 clf.fit(x_train, y_train)
 
 print("Parámetros a usar para SGD: ", clf.best_params_)
@@ -103,7 +103,7 @@ parameters = {'n_estimators':[10, 50, 100], 'min_samples_leaf':[5,10]}
 
 rf = RandomForestRegressor(random_state=seed, max_features="sqrt", oob_score=True)
 
-clf = GridSearchCV(rf, parameters, verbose=3, scoring="neg_root_mean_squared_error")
+clf = GridSearchCV(rf, parameters, verbose=3, scoring="neg_mean_absolute_error")
 clf.fit(x_train, y_train)
 
 print("Parámetros a usar para Random Forest: ", clf.best_params_)
@@ -117,7 +117,7 @@ parameters = {'learning_rate':('adaptive','constant'),'alpha':[0.0001,0.001]}
 
 mlp = MLPRegressor(random_state=seed, activation='tanh')
 
-clf = GridSearchCV(mlp, parameters, verbose=3, scoring="neg_root_mean_squared_error")
+clf = GridSearchCV(mlp, parameters, verbose=3, scoring="neg_mean_absolute_error")
 clf.fit(x_train, y_train)
 
 print("Parámetros a usar para Perceptron Multicapa: ", clf.best_params_)
@@ -128,9 +128,9 @@ input("\n--- Pulsar tecla para continuar ---\n")
 
          #GRADIENTE DESCENDENTE
 
-clf = SGDRegressor(penalty = 'l2', random_state=seed, loss="mse")
+clf = SGDRegressor(penalty = 'l2', random_state=seed)
 
-scores = cross_val_score(clf, x_train, y_train, cv=5, scoring = "neg_mean_squared_error")
+scores = cross_val_score(clf, x_train, y_train, cv=5, scoring = "neg_mean_absolute_error")
  
 print("SGDRegressor CV: ", abs(scores.mean()))
 
@@ -139,7 +139,7 @@ print("SGDRegressor CV: ", abs(scores.mean()))
 
 clf = RandomForestRegressor(penalty = 'l2', random_state=seed)
 
-scores = cross_val_score(clf, x_train, y_train, cv=5, scoring = "neg_mean_squared_error")
+scores = cross_val_score(clf, x_train, y_train, cv=5, scoring = "neg_mean_absolute_error")
  
 print("SGDRegressor CV: ", abs(scores.mean()))
 
@@ -147,7 +147,7 @@ print("SGDRegressor CV: ", abs(scores.mean()))
         
 clf = MLPRegressor(penalty = 'l2', random_state=seed)
 
-scores = cross_val_score(clf, x_train, y_train, cv=5, scoring = "neg_mean_squared_error")
+scores = cross_val_score(clf, x_train, y_train, cv=5, scoring = "neg_mean_absolute_error")
  
 print("SGDRegressor CV: ", abs(scores.mean()))
 
