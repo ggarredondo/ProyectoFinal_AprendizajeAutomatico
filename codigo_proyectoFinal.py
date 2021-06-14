@@ -145,7 +145,7 @@ print("RandomForest CV: ", abs(scores.mean()))
 
          #PERCEPTRON MULTICAPA
         
-clf = MLPRegressor(random_state=seed, activation='tanh', solver='sgd', learning_rate='adaptive', alpha=0.001)
+clf = MLPRegressor(random_state=seed, activation='tanh', solver='sgd', learning_rate='adaptive', alpha=0.001, learning_rate_init=0.01)
 
 scores = cross_val_score(clf, x_train, y_train, cv=5, scoring = "neg_mean_absolute_error")
  
