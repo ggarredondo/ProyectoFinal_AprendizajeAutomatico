@@ -113,7 +113,7 @@ input("\n--- Pulsar tecla para continuar ---\n")
          #PERCEPTRON MULTICAPA
 
 #Parametros que vamos a usar en GridSearch (regularizacion)
-parameters = {'alpha':[0.0001,0.001], 'learning_rate_init':[0.001,0.0001]}
+parameters = {'alpha':[0.0001,0.001], 'learning_rate_init':[0.001,0.01]}
 
 mlp = MLPRegressor(random_state=seed, activation='tanh', solver='sgd', learning_rate='adaptive')
 
