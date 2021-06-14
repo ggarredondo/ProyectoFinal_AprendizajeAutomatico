@@ -15,6 +15,7 @@ from sklearn.model_selection import GridSearchCV
 
 import missingno as msno
 from random import uniform
+from sklearn import metrics
 
 #Definimos la semilla
 seed = 1
@@ -87,7 +88,7 @@ input("\n--- Pulsar tecla para continuar ---\n")
 #Parametros que vamos a usar en GridSearch (regularizacion)
 parameters = {'eta0':[0.01,0.1], 'alpha':[0.0001,0.001]}
 
-sgd = SGDRegressor(random_state=seed, penalty='l2', learning_rate='adaptive')
+sgd = SGDRegressor(random_state=seed, penalty='l2', learning_rate='adaptive', max_iter=2000)
 
 clf = GridSearchCV(sgd, parameters, verbose=3, scoring="neg_mean_absolute_error")
 clf.fit(x_train, y_train)
@@ -150,5 +151,20 @@ clf = MLPRegressor(random_state=seed, activation='tanh', solver='sgd', learning_
 scores = cross_val_score(clf, x_train, y_train, cv=5, scoring = "neg_mean_absolute_error")
  
 print("MLPRegressor CV: ", abs(scores.mean()))
+
+input("\n--- Pulsar tecla para continuar ---\n")
+
+#-----------Etest-------------
+
+#Volvemos a hacer el fit con los datos de entrenamiento y probamos que predice para los de test
+#Para ello usamos el modelo que mejor resultado nos dió en el apartado anterior
+
+clf = SGDRegressor(penalty = 'l2', random_state=seed, learning_rate='adaptive', alpha=0.001)
+
+clf.fit(x_train, y_train)
+
+prediction = clf.predict(x_test)
+
+print("Linear Regression Etest: ", metrics.mean_absolute_error(y_test, prediction))
 
 
