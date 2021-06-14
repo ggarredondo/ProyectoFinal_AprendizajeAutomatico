@@ -41,6 +41,7 @@ x_train, x_test, y_train, y_test = train_test_split(X, Y, test_size=0.20, random
 
 #Pasamos los valores perdidos de una '?' a un 'NaN para que missingno los detecte
 x_train = x_train.replace("?", np.nan)
+x_test = x_test.replace("?", np.nan)
 
 #Mostramos para cada atributo los valores perdidos que tiene
 print(x_train.isnull().sum())
@@ -156,15 +157,19 @@ input("\n--- Pulsar tecla para continuar ---\n")
 
 #-----------Etest-------------
 
-#Volvemos a hacer el fit con los datos de entrenamiento y probamos que predice para los de test
-#Para ello usamos el modelo que mejor resultado nos dió en el apartado anterior
+#Volvemos a hacer el fit con los datos de entrenamiento y probamos que predice para los datos de
+# entrenamiento y test, para ello usamos el modelo que mejor resultado nos dió en el apartado anterior.
 
 reg = RandomForestRegressor(random_state=seed, max_features="sqrt", oob_score=True, min_samples_leaf=5, n_estimators=50)
 
 reg.fit(x_train, y_train)
 
+prediction = reg.predict(x_train)
+
+print("Ein: ", metrics.mean_absolute_error(y_train, prediction))
+
 prediction = reg.predict(x_test)
 
-print("Linear Regression Etest: ", metrics.mean_absolute_error(y_test, prediction))
+print("Etest: ", metrics.mean_absolute_error(y_test, prediction))
 
 
