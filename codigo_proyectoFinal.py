@@ -85,9 +85,9 @@ input("\n--- Pulsar tecla para continuar ---\n")
          #GRADIENTE DESCENDENTE
 
 #Parametros que vamos a usar en GridSearch (regularizacion)
-parameters = {'penalty':('l1','l2','elasticnet')}
+parameters = {'learning_rate':('adaptive','invscaling'), 'eta0':[0.01,0.1]}
 
-sgd = SGDRegressor(random_state=seed)
+sgd = SGDRegressor(random_state=seed,loss="squared_loss", alpha=0.001)
 
 clf = GridSearchCV(sgd, parameters, verbose=3, scoring="neg_root_mean_squared_error")
 clf.fit(x_train, y_train)
@@ -101,9 +101,9 @@ input("\n--- Pulsar tecla para continuar ---\n")
 #Parametros que vamos a usar en GridSearch (regularizacion)
 parameters = {'penalty':('l1','l2','elasticnet')}
 
-sgd = RandomForestRegressor(random_state=seed)
+rf = RandomForestRegressor(random_state=seed)
 
-clf = GridSearchCV(sgd, parameters, verbose=3, scoring="neg_root_mean_squared_error")
+clf = GridSearchCV(rf, parameters, verbose=3, scoring="neg_root_mean_squared_error")
 clf.fit(x_train, y_train)
 
 print("Parámetros a usar para Random Forest: ", clf.best_params_)
@@ -115,9 +115,9 @@ input("\n--- Pulsar tecla para continuar ---\n")
 #Parametros que vamos a usar en GridSearch (regularizacion)
 parameters = {'penalty':('l1','l2','elasticnet')}
 
-sgd = MLPRegressor(random_state=seed)
+mlp = MLPRegressor(random_state=seed)
 
-clf = GridSearchCV(sgd, parameters, verbose=3, scoring="neg_root_mean_squared_error")
+clf = GridSearchCV(mlp, parameters, verbose=3, scoring="neg_root_mean_squared_error")
 clf.fit(x_train, y_train)
 
 print("Parámetros a usar para Perceptron Multicapa: ", clf.best_params_)
@@ -128,7 +128,7 @@ input("\n--- Pulsar tecla para continuar ---\n")
 
          #GRADIENTE DESCENDENTE
 
-clf = SGDRegressor(penalty = 'l2', random_state=seed)
+clf = SGDRegressor(penalty = 'l2', random_state=seed, loss="mse")
 
 scores = cross_val_score(clf, x_train, y_train, cv=5, scoring = "neg_mean_squared_error")
  
