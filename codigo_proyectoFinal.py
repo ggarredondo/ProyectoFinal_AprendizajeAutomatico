@@ -12,7 +12,6 @@ from sklearn.ensemble import RandomForestRegressor
 from sklearn.neural_network import MLPRegressor
 from sklearn.model_selection import cross_val_score
 from sklearn.model_selection import GridSearchCV
-from sklearn.tree import cost_complexity_pruning_path
 
 import missingno as msno
 from random import uniform
@@ -100,9 +99,9 @@ input("\n--- Pulsar tecla para continuar ---\n")
          #RANDOM FOREST
 
 #Parametros que vamos a usar en GridSearch (regularizacion)
-parameters = {'n_estimators':[10, 50, 100]}
+parameters = {'n_estimators':[10, 50, 100], 'min_samples_leaf':[5,10]}
 
-rf = RandomForestRegressor(random_state=seed, min_samples_leaf=5, max_features="sqrt", oob_score=True)
+rf = RandomForestRegressor(random_state=seed, max_features="sqrt", oob_score=True)
 
 clf = GridSearchCV(rf, parameters, verbose=3, scoring="neg_root_mean_squared_error")
 clf.fit(x_train, y_train)
@@ -114,7 +113,7 @@ input("\n--- Pulsar tecla para continuar ---\n")
          #PERCEPTRON MULTICAPA
 
 #Parametros que vamos a usar en GridSearch (regularizacion)
-parameters = {'learning_rate':('adaptive','constant'),'alpha':[0.0001,0.001], 'momentum':[0.9,0.5]}
+parameters = {'learning_rate':('adaptive','constant'),'alpha':[0.0001,0.001]}
 
 mlp = MLPRegressor(random_state=seed, activation='tanh')
 
