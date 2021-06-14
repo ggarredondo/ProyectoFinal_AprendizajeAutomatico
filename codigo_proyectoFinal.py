@@ -159,7 +159,7 @@ input("\n--- Pulsar tecla para continuar ---\n")
 #Volvemos a hacer el fit con los datos de entrenamiento y probamos que predice para los de test
 #Para ello usamos el modelo que mejor resultado nos dió en el apartado anterior
 
-clf = SGDRegressor(penalty = 'l2', random_state=seed, learning_rate='adaptive', alpha=0.001)
+clf = RandomForestRegressor(random_state=seed, max_features="sqrt", oob_score=True, min_samples_leaf=5, n_estimators=50)
 
 clf.fit(x_train, y_train)
 
